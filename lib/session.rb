@@ -17,12 +17,14 @@ class Session
   end
 
   def []=(key, val)
+    debugger
     @cookie[key] = val
   end
 
   # serialize the hash into json and save in a cookie
   # add to the responses cookies
   def store_session(res)
+    # debugger
     res.set_cookie("_rails_lite_app", {path: "/", value: @cookie.to_json})
   end
 end

@@ -10,6 +10,9 @@ class ControllerBase
   # Setup the controller
   def initialize(req, res, route_params = {})
     @req, @res = req, res
+    @params = route_params
+    @params = req.params.merge(route_params) # unless @params.empty?
+    # debugger
   end
 
   # Helper method to alias @already_built_response
@@ -23,7 +26,7 @@ class ControllerBase
     res['location'] = url
     res.status = 302
     @already_built_response = res
-    @session.store_session(res)
+    session.store_session(res)
   end
 
   # Populate the response with content.
@@ -34,7 +37,7 @@ class ControllerBase
     res['Content-Type'] = content_type
     res.write(content)
     @already_built_response = res
-    @session.store_session(res)
+    session.store_session(res)
   end
 
   # use ERB and binding to evaluate templates
@@ -54,5 +57,7 @@ class ControllerBase
 
   # use this with the router to call action_name (:index, :show, :create...)
   def invoke_action(name)
+    send name
+    # render name unless already_built_response?
   end
 end
